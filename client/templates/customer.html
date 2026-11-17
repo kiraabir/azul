@@ -1,0 +1,62 @@
+{% extends "_base_azul.html" %}
+{% block title %}Customer: {{ customer.name }}{% endblock %}
+
+{% block content %}
+<div class="azul-section">
+  <div class="azul-card" style="display: flex; gap: var(--spacing-xl); flex-wrap: wrap;">
+    <div style="flex: 1; min-width: 300px;">
+      <h3 class="azul-card-title">{{ customer.name }}</h3>
+
+      <div style="margin-bottom: var(--spacing-lg);">
+        <div style="display: flex; gap: var(--spacing-sm); align-items: center; margin-bottom: var(--spacing-sm);">
+          <span class="azul-muted">Phone:</span>
+          {% if customer.phone %}
+            <strong>{{ customer.phone }}</strong>
+          {% else %}
+            <span class="azul-muted">not provided</span>
+          {% endif %}
+        </div>
+        <div style="display: flex; gap: var(--spacing-sm); align-items: center; margin-bottom: var(--spacing-sm);">
+          <span class="azul-muted">Email:</span>
+          {% if customer.email %}
+            <strong>{{ customer.email }}</strong>
+          {% else %}
+            <span class="azul-muted">not provided</span>
+          {% endif %}
+        </div>
+      </div>
+
+      {% if customer.active_card %}
+        <div style="padding: var(--spacing-md); background: #f0f9ff; border-radius: var(--radius-md); border-left: 4px solid var(--azul-accent);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-sm);">
+            <span class="azul-muted">Balance</span>
+            <a href="{{ url_for('card_detail', card_id=customer.active_card.id) }}" class="azul-btn azul-btn--ghost" style="font-size: var(--font-size-sm); padding: 4px 8px;">View Card</a>
+          </div>
+          <div class="azul-stat-value azul-stat-value--growth">{{ customer.active_card.points_balance }}</div>
+          <div class="azul-muted" style="font-size: var(--font-size-sm);">points</div>
+        </div>
+      {% else %}
+        <div style="padding: var(--spacing-md); background: #fef3c7; border-radius: var(--radius-md); border-left: 4px solid var(--azul-warning);">
+          <p class="azul-muted" style="margin: 0;">No active loyalty card for this customer.</p>
+        </div>
+      {% endif %}
+    </div>
+
+    <div style="flex: 1; min-width: 250px;">
+      <a href="{{ url_for('customer_new') }}" class="azul-btn azul-btn--primary azul-btn--ghost" style="font-size: var(--font-size-sm);">
+        Edit Customer
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+  {% block extra_page_css %}
+  .azul-section {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0;
+  }
+  {% endblock %}
+</style>
+{% endblock %}

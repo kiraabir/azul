@@ -1,0 +1,143 @@
+{% extends "_base_azul.html" %}
+{% block title %}AZUL Dashboard{% endblock %}
+
+{% block content %}
+<div class="azul-section">
+  <h2 class="azul-section-title">Dashboard</h2>
+  <p class="azul-section-subtitle">Welcome back! Here's your loyalty program overview.</p>
+
+  {# Stats Cards #}
+  <div class="azul-stats">
+    <div class="azul-stat-card">
+      <div class="azul-stat-value">{{ active_cards }}</div>
+      <div class="azul-stat-label">Active Cards</div>
+      <div class="azul-muted" style="font-size: 0.8rem;">customers with wallet cards</div>
+    </div>
+
+    <div class="azul-stat-card">
+      <div class="azul-stat-value">{{ cards_with_phone }}">{{ cards_no_phone }}</div>
+      <div class="azul-stat-label">SMS Reach</div>
+      <div class="azul-muted" style="font-size: 0.8rem;">with phone / without phone</div>
+    </div>
+
+    <div class="azul-stat-card">
+      <div class="azul-stat-value">{{ total_stamps }}</div>
+      <div class="azul-stat-label">Total Stamps</div>
+      <div class="azul-muted" style="font-size: 0.8rem;">issued this month</div>
+    </div>
+
+    <div class="azul-stat-card">
+      {% if redemption_rate > 0 %}
+        <div class="azul-stat-value azul-stat-value--ok">{{ '%0.1f'|format(redemption_rate * 100) }}%</div>
+      {% else %}
+        <div class="azul-stat-value">0%</div>
+      {% endif %}
+      <div class="azul-stat-label">Redemption Rate</div>
+      <div class="azul-muted" style="font-size: 0.8rem;">of stamps redeemed</div>
+    </div>
+  </div>
+
+  {# Recent Activity #}
+  <div class="azul-card">
+    <div class="azul-card-header">
+      <h3 class="azul-card-title">Recent Activity</h3>
+    </div>
+
+    {% if recent %}
+      <div class="azul-table-container">
+        <table class="azul-table">
+          <thead>
+            <tr>
+              <th>When</th>
+              <th>Customer</th>
+              <th>Action</th>
+              <th>Stamps</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for tx in recent %}
+              <tr>
+                <td class="azul-muted">{{ tx.created_at.strftime('%Y-%m-%d %H:%M') if tx.created_at else '' }}</td>
+                <td><strong>{{ tx.card.customer.name if tx.card and tx.card.customer else 'Unknown' }}</strong></td>
+                <td>
+                  {% if tx.type == 'earn' %}
+                    <span class="azul-badge azul-badge--success">Earned</span>
+                  {% else %}
+                    <span class="azul-badge azul-badge--secondary">Redeemed</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if tx.type == 'earn' %}
+                    <span class="azul-stat-value azul-stat-value--growth">+{{ tx.points }}</span>
+                  {% else %}
+                    <span class="azul-stat-value">-{{ tx.points }}</span>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="azul-empty-state">
+        <div class="azul-empty-icon">🎫</div>
+        <h3 class="azul-empty-title">No transactions yet</h3>
+        <p class="azul-empty-text">Start by issuing your first loyalty card.</p>
+        <a href="{{ url_for('card_new') }}" class="azul-btn azul-btn--primary">Issue a Card</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  {% block extra_page_css %}
+  .azul-section {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  .azul-section-title {
+    margin: 0 0 var(--spacing-sm) 0;
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    color: var(--azul-dark);
+  }
+
+  .azul-section-subtitle {
+    margin: 0 0 var(--spacing-xl) 0;
+    color: var(--azul-muted);
+    font-size: var(--font-size-base);
+  }
+
+  .azul-table-container {
+    overflow-x: auto;
+  }
+
+  .azul-card-title {
+    margin: 0;
+    font-size: var(--font-size-lg);
+    color: var(--azul-dark);
+  }
+
+  .azul-empty-state {
+    text-align: center;
+    padding: var(--spacing-2xl) var(--spacing-lg);
+  }
+
+  .azul-empty-icon {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .azul-empty-title {
+    margin: 0 0 var(--spacing-sm) 0;
+    color: var(--azul-dark);
+  }
+
+  .azul-empty-text {
+    color: var(--azul-muted);
+    margin-bottom: var(--spacing-lg);
+  }
+  {% endblock %}
+{% endblock %}

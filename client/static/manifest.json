@@ -1,0 +1,22 @@
+{
+  "name": "AZUL Loyalty Cards",
+  "short_name": "AZUL",
+  "description": "Digital loyalty cards for Moroccan businesses. No app needed - just tap and earn!",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f0f9ff",
+  "theme_color": "#0ea5e9",
+  "icons": [
+    {
+      "src": "/static/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "lang": "en"
+}

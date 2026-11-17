@@ -1,0 +1,42 @@
+# Render deployment configuration for AZUL
+# Deploy via: render.com/dashboard (free tier available)
+# This file enables zero-cost deployment on Render
+
+databases:
+  - name: azul-db
+    plan: free
+    databaseName: azul
+    databaseUser: azul_user
+
+services:
+  - type: web
+    name: azul-app
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn -w 2 -b 0.0.0.0:$PORT app:app
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: azul-db
+          property: databaseUrl
+      - key: SECRET_KEY
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: FLASK_ENV
+        value: production
+      - key: DEBUG
+        value: "False"
+      - key: TZ
+        value: Africa/Casablanca
+
+# Static files are served by Gunicorn/Flask directly
+# No separate static file service needed for initial deployment
+
+# Cron jobs for zero-cost backups (optional)
+# Uncomment when ready:
+# cronJobs:
+#   - schedule: "0 2 * * *"  # 2 AM UTC daily
+#     command: python backup_database.py
+#     name: daily-backup

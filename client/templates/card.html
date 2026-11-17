@@ -1,0 +1,143 @@
+{% extends "_base_azul.html" %}
+{% block title %}Card {{ card.card_number }}{% endblock %}
+
+{% block content %}
+<div class="azul-section">
+  <div class="azul-stats">
+    <div class="azul-stat-card">
+      <div class="azul-stat-value">{{ card.customer.name if card.customer else 'Unknown customer' }}</div>
+      <div class="azul-stat-label">Card Holder</div>
+    </div>
+
+    <div class="azul-stat-card">
+      <div class="azul-stat-value">{{ card.card_number }}</div>
+      <div class="azul-stat-label">Card Number</div>
+    </div>
+
+    <div class="azul-stat-card">
+      {% if card.points_balance > 0 %}
+        <div class="azul-stat-value azul-stat-value--growth">{{ card.points_balance }}</div>
+      {% else %}
+        <div class="azul-stat-value">0</div>
+      {% endif %}
+      <div class="azul-stat-label">Points Balance</div>
+    </div>
+
+    <div class="azul-stat-card">
+      <div class="azul-stat-value">
+        {% if card.is_wallet_synced %}
+          <span class="azul-badge azul-badge--success">Synced</span>
+        {% else %}
+          <span class="azul-badge azul-badge--secondary">Pending</span>
+        {% endif %}
+      </div>
+      <div class="azul-stat-label">Wallet Status</div>
+    </div>
+  </div>
+
+  {# Progress to Next Reward #}
+  {% if progress %}
+    <div class="azul-card" style="margin-bottom: var(--spacing-xl);">
+      <h3 class="azul-card-title">Progress to Next Reward</h3>
+
+      <div style="margin-bottom: var(--spacing-md);">
+        <div class="azul-muted" style="margin-bottom: var(--spacing-xs);">
+          {{ progress.remaining }}/{{ progress.target }} stamps
+        </div>
+        <div class="azul-progress">
+          <div class="azul-progress-fill" style="width: {{ progress.progress }}%;"></div>
+        </div>
+      </div>
+
+      {% if card.wallet_serial %}
+        <div style="padding: var(--spacing-md); background: #e0f2fe; border-radius: var(--radius-md); border: 1px solid #bfdbfe;">
+          <strong>Wallet Pass:</strong> Synced to device
+        </div>
+      {% else %}
+        <div style="padding: var(--spacing-md); background: #fef3c7; border-radius: var(--radius-md); border: 1px solid #fde68a;">
+          <strong>Wallet Pass:</strong> Not yet synced. Use counter tag to add.
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+
+  {# QR Code #}
+  <div class="azul-card" style="text-align: center; margin-bottom: var(--spacing-xl);">
+    <h3 class="azul-card-title" style="margin-bottom: var(--spacing-lg);">QR Code</h3>
+    <img class="qr" src="{{ url_for('card_qr_png', card_id=card.id) }}" alt="QR code" style="width: 200px; height: 200px; margin: 0 auto;">
+    <p class="azul-muted" style="font-size: var(--font-size-sm); margin-top: var(--spacing-sm);">Scan for in-store loyalty</p>
+  </div>
+
+  {# Transaction History #}
+  <div class="azul-card">
+    <div class="azul-card-header">
+      <h3 class="azul-card-title">Transaction History</h3>
+    </div>
+
+    {% if card.transactions %}
+      <div class="azul-table-container">
+        <table class="azul-table">
+          <thead>
+            <tr>
+              <th>When</th>
+              <th>Type</th>
+              <th>Stamps</th>
+              <th>Description</th>
+              <th>Feedback</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for tx in card.transactions %}
+              <tr>
+                <td class="azul-muted">{{ tx.created_at.strftime('%Y-%m-%d %H:%M') if tx.created_at else '' }}</td>
+                <td>
+                  {% if tx.type == 'earn' %}
+                    <span class="azul-badge azul-badge--success">Earned</span>
+                  {% else %}
+                    <span class="azul-badge azul-badge--secondary">Redeemed</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if tx.type == 'earn' %}
+                    <span class="azul-stat-value azul-stat-value--growth">+{{ tx.points }}</span>
+                  {% else %}
+                    <span class="azul-stat-value">-{{ tx.points }}</span>
+                  {% endif %}
+                </td>
+                <td>{{ tx.description }}</td>
+                <td>
+                  {% if tx.feedback %}
+                    ⭐ {{ tx.feedback.rating }}/5
+                  {% else %}
+                    <span class="azul-muted">—</span>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="azul-empty-state">
+        <div class="azul-empty-icon">📊</div>
+        <h3 class="azul-empty-title">No transactions yet</h3>
+        <p class="azul-empty-text">First earn or redeem points to build this history.</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  {% block extra_page_css %}
+  .azul-section {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  .azul-table-container {
+    overflow-x: auto;
+  }
+  {% endblock %}
+</style>
+{% endblock %}

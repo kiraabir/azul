@@ -1,0 +1,146 @@
+{% extends "_base_azul.html" %}
+{% block title %}Login - AZUL Loyalty{% endblock %}
+
+{% block extra_css %}
+<style>
+  .azul-auth-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: var(--spacing-xl) 0;
+  }
+
+  .azul-auth-card {
+    background: #fff;
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--azul-border);
+  }
+
+  .azul-auth-header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+  }
+
+  .azul-auth-header h1 {
+    margin: 0 0 var(--spacing-sm) 0;
+    color: var(--azul-dark);
+    font-size: var(--font-size-2xl);
+  }
+
+  .azul-auth-header p {
+    margin: 0;
+    color: var(--azul-muted);
+    font-size: var(--font-size-base);
+  }
+
+  .azul-form-group {
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .azul-form-group label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    color: var(--azul-dark);
+    font-weight: 500;
+  }
+
+  .azul-form-group input {
+    width: 100%;
+    padding: var(--spacing-md);
+    border: 1px solid var(--azul-border);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-base);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  .azul-form-group input:focus {
+    outline: none;
+    border-color: var(--azul-accent);
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+  }
+
+  .azul-form-group input[type="password"] {
+    width: 100%;
+  }
+
+  .azul-auth-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-xl);
+  }
+
+  .azul-auth-links {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--spacing-lg);
+    font-size: var(--font-size-sm);
+  }
+
+  .azul-auth-links a {
+    color: var(--azul-accent);
+    text-decoration: none;
+  }
+
+  .azul-auth-links a:hover {
+    text-decoration: underline;
+  }
+
+  .azul-link {
+    color: var(--azul-accent);
+    text-decoration: none;
+  }
+
+  .azul-link:hover {
+    text-decoration: underline;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="azul-auth-container">
+  <div class="azul-auth-card">
+    <div class="azul-auth-header">
+      <h1>Welcome to AZUL</h1>
+      <p>Sign in to your merchant dashboard</p>
+    </div>
+
+    <form method="post" class="azul-form" id="loginForm">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <div class="azul-form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email"
+               value="{{ email or '' }}"
+               placeholder="Enter your email"
+               required autocomplete="email">
+      </div>
+
+      <div class="azul-form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password"
+               placeholder="Enter your password"
+               required autocomplete="current-password">
+      </div>
+
+      <div class="azul-form-group" style="display: flex; justify-content: flex-end;">
+        <a href="{{ url_for('auth.request_password_reset') }}" class="azul-link" style="color: var(--azul-accent); font-size: var(--font-size-sm);">
+          Forgot password?
+        </a>
+      </div>
+
+      <div class="azul-auth-actions">
+        <button type="submit" class="azul-btn azul-btn--primary azul-btn--full-width" style="width: 100%;">
+          Sign In
+        </button>
+      </div>
+    </form>
+
+    <div class="azul-auth-links">
+      <a href="{{ url_for('auth.register') }}">Don't have an account? Create one</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

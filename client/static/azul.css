@@ -1,0 +1,539 @@
+/* =============================================================================
+   AZUL Loyalty Platform - Design System
+   Premium Blue Theme for Moroccan Businesses
+   ============================================================================= */
+
+:root {
+  /* Color Palette */
+  --azul-dark: #1e3a8a;        /* Primary dark blue */
+  --azul-accent: #0ea5e9;      /* Bright accent blue (turquoise) */
+  --azul-light: #f0f9ff;       /* Light background blue */
+  --azul-border: #cbd5e1;      /* Subtle borders */
+  --azul-muted: #64748b;       /* Muted text */
+  --azul-success: #10b981;     /* Success green */
+  --azul-warning: #f59e0b;     /* Warning amber */
+  --azul-danger: #ef4444;      /* Error red */
+
+  /* Typography */
+  --font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-size-sm: 0.85rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.1rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 2rem;
+
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 24px;
+  --spacing-2xl: 32px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+
+  /* Border radius */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+}
+
+/* =============================================================================
+   Base Styles
+   ============================================================================= */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  background: var(--azul-light);
+  color: var(--azul-dark);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* =============================================================================
+   Header & Navigation
+   ============================================================================= */
+.azul-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: linear-gradient(135deg, var(--azul-dark), #1e40af);
+  color: #fff;
+  padding: var(--spacing-md) var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-md);
+}
+
+.azul-header-title {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+}
+
+.azul-header-title span {
+  background: linear-gradient(45deg, var(--azul-accent), #059669);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+.azul-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+.azul-nav-link {
+  color: #fff;
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  transition: background 0.15s, opacity 0.15s;
+}
+
+.azul-nav-link:hover {
+  background: rgba(255,255,255,0.1);
+  opacity: 0.9;
+}
+
+.azul-nav-link.active {
+  background: var(--azul-accent);
+  font-weight: 600;
+}
+
+/* =============================================================================
+   Main Content
+   ============================================================================= */
+.azul-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+}
+
+/* =============================================================================
+   Flash Messages
+   ============================================================================= */
+.azul-flash {
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-lg);
+  font-size: var(--font-size-base);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.azul-flash--ok {
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.azul-flash--error {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.azul-flash--warning {
+  background: #fffbeb;
+  color: #92400e;
+  border: 1px solid #fcd34d;
+}
+
+.azul-flash--info {
+  background: #eff6ff;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+}
+
+/* =============================================================================
+   Cards
+   ============================================================================= */
+.azul-card {
+  background: #fff;
+  border: 1px solid var(--azul-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-md);
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+
+.azul-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.azul-card-header {
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--azul-border);
+}
+
+.azul-card-header h3 {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  color: var(--azul-dark);
+  font-weight: 600;
+}
+
+/* =============================================================================
+   Stats & Metrics
+   ============================================================================= */
+.azul-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+}
+
+.azul-stat-card {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-md);
+  text-align: center;
+}
+
+.azul-stat-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--azul-dark);
+}
+
+.azul-stat-label {
+  font-size: var(--font-size-sm);
+  color: var(--azul-muted);
+  margin-top: var(--spacing-xs);
+}
+
+.azul-stat-value--ok {
+  color: var(--azul-success);
+}
+
+.azul-stat-value--growth {
+  color: var(--azul-accent);
+}
+
+/* =============================================================================
+   Tables
+   ============================================================================= */
+.azul-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: var(--spacing-lg);
+  background: #fff;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.azul-table th {
+  background: #f8fafc;
+  text-align: left;
+  padding: var(--spacing-md);
+  border-bottom: 2px solid var(--azul-border);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--azul-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.azul-table td {
+  padding: var(--spacing-md);
+  border-bottom: 1px solid var(--azul-border);
+  font-size: var(--font-size-base);
+}
+
+.azul-table tr:hover {
+  background: #f8fafc;
+}
+
+.azul-table .azul-status--active {
+  color: var(--azul-success);
+  font-weight: 600;
+}
+
+.azul-table .azul-status--pending {
+  color: var(--azul-warning);
+  font-weight: 600;
+}
+
+/* =============================================================================
+   Forms
+   ============================================================================= */
+.azul-form {
+  display: grid;
+  gap: var(--spacing-lg);
+  max-width: 600px;
+}
+
+.azul-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.azul-form-group label {
+  display: block;
+  font-size: var(--font-size-sm);
+  color: var(--azul-muted);
+  font-weight: 500;
+}
+
+.azul-form-group input,
+.azul-form-group select,
+.azul-form-group textarea {
+  width: 100%;
+  padding: var(--spacing-md);
+  border: 1px solid var(--azul-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-family: var(--font-family);
+  background: #fff;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.azul-form-group input:focus,
+.azul-form-group select:focus,
+.azul-form-group textarea:focus {
+  outline: none;
+  border-color: var(--azul-accent);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+}
+
+.azul-form-group input[disabled],
+.azul-form-group select[disabled],
+.azul-form-group textarea[disabled] {
+  background: #f8fafc;
+  cursor: not-allowed;
+}
+
+/* =============================================================================
+   Buttons
+   ============================================================================= */
+.azul-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  text-decoration: none;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+}
+
+.azul-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.azul-btn--primary {
+  background: var(--azul-accent);
+  color: #fff;
+}
+
+.azul-btn--primary:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.azul-btn--secondary {
+  background: var(--azul-muted);
+  color: #fff;
+}
+
+.azul-btn--secondary:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.azul-btn--success {
+  background: var(--azul-success);
+  color: #fff;
+}
+
+.azul-btn--success:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.azul-btn--ghost {
+  background: transparent;
+  color: var(--azul-muted);
+  border: 1px solid var(--azul-border);
+}
+
+.azul-btn--ghost:hover:not(:disabled) {
+  background: #f8fafc;
+  color: var(--azul-dark);
+}
+
+/* =============================================================================
+   Wallet Pass Styling
+   ============================================================================= */
+.wallet-pass {
+  background: linear-gradient(135deg, #ffffff, #f0f9ff);
+  border: 2px solid var(--azul-accent);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-lg);
+  font-family: var(--font-family);
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.wallet-pass .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--azul-border);
+}
+
+.wallet-pass .shop-name {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--azul-dark);
+  background: linear-gradient(45deg, var(--azul-accent), #059669);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.wallet-pass .customer-name {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--azul-dark);
+  margin-bottom: var(--spacing-lg);
+}
+
+.wallet-pass .points {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--azul-dark);
+  text-align: center;
+  margin: var(--spacing-lg) 0;
+}
+
+.wallet-pass .points-label {
+  text-align: center;
+  color: var(--azul-muted);
+  font-size: var(--font-size-sm);
+}
+
+/* =============================================================================
+   Progress Bars
+   ============================================================================= */
+.azul-progress {
+  width: 100%;
+  height: 12px;
+  background: var(--azul-border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-top: var(--spacing-sm);
+}
+
+.azul-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--azul-accent), var(--azul-success));
+  transition: width 0.3s ease;
+  border-radius: var(--radius-full);
+}
+
+/* =============================================================================
+   Stat Badges
+   ============================================================================= */
+.azul-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.azul-badge--primary {
+  background: var(--azul-accent);
+  color: #fff;
+}
+
+.azul-badge--secondary {
+  background: var(--azul-border);
+  color: var(--azul-dark);
+}
+
+.azul-badge--success {
+  background: var(--azul-success);
+  color: #fff;
+}
+
+/* =============================================================================
+   QR Codes
+   ============================================================================= */
+img.qr {
+  border: 1px solid var(--azul-border);
+  border-radius: var(--radius-md);
+}
+
+/* =============================================================================
+   Responsive Design
+   ============================================================================= */
+@media (max-width: 768px) {
+  .azul-header {
+    flex-direction: column;
+    gap: var(--spacing-md);
+    text-align: center;
+  }
+
+  .azul-nav {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .azul-main {
+    padding: var(--spacing-lg);
+  }
+
+  .azul-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .wallet-pass {
+    padding: var(--spacing-lg);
+  }
+
+  .wallet-pass .points {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .azul-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .wallet-pass {
+    padding: var(--spacing-md);
+  }
+
+  .wallet-pass .points {
+    font-size: 2rem;
+  }
+}

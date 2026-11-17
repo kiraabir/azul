@@ -1,0 +1,19 @@
+{
+  "name": "apology-website",
+  "version": "1.0.0",
+  "description": "AZUL is a digital loyalty card platform for local businesses in Morocco. Unlike monthly subscription models, AZUL offers a one-time purchase solution that drops loyalty cards directly into customers' Apple Wallet or Google Wallet.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "playwright": "^1.65.1"
+  }
+}

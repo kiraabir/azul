@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}AZUL{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='azul.css') }}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+  <header class="azul-header">
+    <h1 class="azul-header-title"><span>AZUL</span> Loyalty Cards</h1>
+    <nav class="azul-nav">
+      <a href="{{ url_for('index') }}" class="azul-nav-link">Dashboard</a>
+      <a href="{{ url_for('customers_list') }}" class="azul-nav-link">Customers</a>
+      <a href="{{ url_for('card_new') }}" class="azul-nav-link">New Card</a>
+      <a href="{{ url_for('settings') }}" class="azul-nav-link">Settings</a>
+      {% if session.get('user_id') %}
+        <a href="{{ url_for('auth.logout') }}" class="azul-nav-link">Logout</a>
+      {% endif %}
+    </nav>
+  </header>
+  <main class="azul-main">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, msg in messages %}
+          <div class="azul-flash azul-flash--{{ category }}">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="azul-footer">
+    <p class="azul-footer-text">AZUL Loyalty Cards – Digital loyalty for local businesses</p>
+  </footer>
+</body>
+</html>

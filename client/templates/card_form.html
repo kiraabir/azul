@@ -1,0 +1,89 @@
+{% extends "_base_azul.html" %}
+{% block title %}Issue Loyalty Card{% endblock %}
+
+{% block content %}
+<div class="azul-section">
+  <div class="azul-card" style="max-width: 600px; margin: 0 auto; padding: var(--spacing-xl);">
+    <div class="azul-card-header">
+      <h3 class="azul-card-title">Issue Loyalty Card</h3>
+      <p class="azul-section-subtitle">Select an existing customer or add a new one.</p>
+    </div>
+
+    <form method="post" class="azul-form">
+      <div class="azul-form-group">
+        <label>Customer</label>
+        <select name="customer_id" required style="width: 100%;">
+          <option value="">— choose a customer —</option>
+          {% for c in customers %}
+            <option value="{{ c.id }}">{{ c.name }}{% if c.phone %} ({{ c.phone }}){% endif %}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="azul-form-group">
+        <label>
+          <input type="checkbox" name="include_qr" checked>
+          Also show QR code on screen
+        </label>
+      </div>
+
+      <button type="submit" class="azul-btn azul-btn--primary azul-btn--large">Create Wallet Pass</button>
+    </form>
+
+    <div style="margin-top: var(--spacing-xl); padding-top: var(--spacing-lg); border-top: 1px solid var(--azul-border);">
+      <h4 style="margin: 0 0 var(--spacing-sm) 0;">Alternative: Create from Tag Scan</h4>
+      <p style="color: var(--azul-muted); margin-bottom: var(--spacing-md);">
+        If customer scanned a counter tag/NFC, use the capture flow.
+      </p>
+      <a href="{{ url_for('capture_customer_info') }}" class="azul-btn azul-btn--secondary azul-btn--large">Capture Info Flow</a>
+      <div style="margin-top: var(--spacing-lg); text-align: center;">
+        <a href="{{ url_for('customers_list') }}" class="azul-btn azul-btn--ghost">Cancel</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  {% block extra_page_css %}
+  .azul-section {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  .azul-form-group label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    color: var(--azul-muted);
+    font-weight: 500;
+  }
+
+  .azul-form-group select {
+    width: 100%;
+    padding: var(--spacing-md);
+    border: 1px solid var(--azul-border);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-base);
+    background: #fff;
+  }
+
+  .azul-form-group select:focus {
+    outline: none;
+    border-color: var(--azul-accent);
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+  }
+
+  .azul-form-group input[type="checkbox"] {
+    width: auto;
+    margin-right: var(--spacing-sm);
+  }
+
+  .azul-btn--large {
+    width: 100%;
+    padding: var(--spacing-lg);
+    font-size: var(--font-size-lg);
+  }
+  {% endblock %}
+</style>
+{% endblock %}

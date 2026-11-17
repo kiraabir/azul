@@ -1,0 +1,169 @@
+{% extends "_base_azul.html" %}
+{% block title %}Customers{% endblock %}
+
+{% block content %}
+<div class="azul-section">
+  <h2 class="azul-section-title">Customers</h2>
+
+  {# Search & Actions #}
+  <div class="azul-card">
+    <form method="get" class="azul-form azul-form--search" style="display: flex; gap: var(--spacing-md); align-items: center; flex-wrap: wrap;">
+      <input type="text" name="q" value="{{ q }}" placeholder="Search name or phone" class="azul-input">
+      <button type="submit" class="azul-btn azul-btn--primary">Search</button>
+      {% if q %}
+        <a href="{{ url_for('customers_list') }}" class="azul-btn azul-btn--ghost">Clear</a>
+      {% endif %}
+    </form>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: var(--spacing-lg);">
+      <label style="display: flex; align-items: center; gap: var(--spacing-sm); margin: 0;">
+        <input type="checkbox" id="filter-has-phone" checked>
+        <span style="font-size: var(--font-size-sm); color: var(--azul-muted);">Show only with phone</span>
+      </label>
+      <a href="{{ url_for('send_re_engagement_campaign') }}" class="azul-btn azul-btn--secondary" style="font-size: var(--font-size-sm);">
+        📨 Re-engagement SMS
+      </a>
+    </div>
+  </div>
+
+  {# Customers Table #}
+  {% if customers %}
+    <div class="azul-card">
+      <div class="azul-card-header">
+        <h3 class="azul-card-title">{{ customers|length }} Customer{{ 's' if customers|length != 1 else '' }}</h3>
+      </div>
+
+      <div class="azul-table-container">
+        <table class="azul-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Pass Status</th>
+              <th>Last Seen</th>
+              <th>Stamps</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for c in customers %}
+              <tr>
+                <td>
+                  <strong>{{ c.name }}</strong>
+                  {% if c.phone %}
+                    <div class="azul-muted" style="font-size: var(--font-size-sm);">ID: {{ c.id }}</div>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if c.phone %}
+                    {{ c.phone }}
+                    {% if not c.has_phone %}
+                      <span class="azul-badge azul-badge--secondary" style="font-size: 0.7rem; margin-left: 8px;">SMS Disabled</span>
+                    {% endif %}
+                  {% else %}
+                    <span class="azul-muted">not provided</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if c.wallet_pass_id %}
+                    <span class="azul-badge azul-badge--success">Synced</span>
+                  {% else %}
+                    <span class="azul-badge azul-badge--secondary">Pending</span>
+                  {% endif %}
+                </td>
+                <td class="azul-muted">
+                  {% if c.last_seen_at %}
+                    {{ c.last_seen_at.strftime('%Y-%m-%d') }}
+                  {% else %}
+                    <span class="azul-muted">never</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if c.active_card %}
+                    {{ c.active_card.points_balance }}
+                  {% else %}
+                    —
+                  {% endif %}
+                </td>
+                <td>
+                  <a href="{{ url_for('customer_detail', customer_id=c.id) }}" class="azul-btn azul-btn--ghost" style="font-size: var(--font-size-sm);">
+                    View
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% else %}
+    {# Empty State #}
+    <div class="azul-card azul-empty-state">
+      <div class="azul-empty-icon">👥</div>
+      <h3 class="azul-empty-title">No customers yet</h3>
+      <p class="azul-empty-text">Add your first customer to start building your loyalty program.</p>
+      <a href="{{ url_for('customer_new') }}" class="azul-btn azul-btn--primary">Add Customer</a>
+    </div>
+  {% endif %}
+
+  {# Add Customer Button #}
+  <div style="margin-top: var(--spacing-xl);">
+    <a href="{{ url_for('customer_new') }}" class="azul-btn azul-btn--primary">➕ Add New Customer</a>
+  </div>
+</div>
+
+<style>
+  {% block extra_page_css %}
+  .azul-section {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  .azul-section-title {
+    margin: 0 0 var(--spacing-sm) 0;
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    color: var(--azul-dark);
+  }
+
+  .azul-form--search {
+    max-width: 500px;
+  }
+
+  .azul-input {
+    flex: 1;
+    padding: var(--spacing-md);
+    border: 1px solid var(--azul-border);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-base);
+  }
+
+  .azul-input:focus {
+    outline: none;
+    border-color: var(--azul-accent);
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+  }
+
+  .azul-empty-state {
+    text-align: center;
+    padding: var(--spacing-2xl) var(--spacing-lg);
+  }
+
+  .azul-empty-icon {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .azul-empty-title {
+    margin: 0 0 var(--spacing-sm) 0;
+    color: var(--azul-dark);
+  }
+
+  .azul-empty-text {
+    color: var(--azul-muted);
+    margin-bottom: var(--spacing-lg);
+  }
+  {% endblock %}
+</style>
+{% endblock %}

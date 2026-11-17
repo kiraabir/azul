@@ -1,0 +1,50 @@
+{% extends "_base_azul.html" %}
+{% block title %}Send to Wallet - {{ card.card_number }}{% endblock %}
+
+{% block content %}
+<div class="azul-section">
+  <h2 class="azul-section-title">Add to Wallet</h2>
+  <p class="azul-section-subtitle">Add {{ card.customer.name }}'s loyalty card to their device wallet.</p>
+
+  <div class="azul-card" style="text-align: center;">
+    <h3 class="azul-card-title" style="margin-bottom: var(--spacing-lg);">Choose Your Wallet</h3>
+
+    <div style="display: flex; gap: var(--spacing-lg); justify-content: center; flex-wrap: wrap;">
+      <a href="{{ apple_url }}" class="azul-btn azul-btn--primary" style="font-size: var(--font-size-lg); padding: var(--spacing-lg) var(--spacing-xl);">
+        🍎 Apple Wallet
+      </a>
+      <a href="{{ google_url }}" class="azul-btn azul-btn--secondary" style="font-size: var(--font-size-lg); padding: var(--spacing-lg) var(--spacing-xl);">
+        ▶ Google Wallet
+      </a>
+    </div>
+
+    <div style="margin-top: var(--spacing-xl); padding-top: var(--spacing-lg); border-top: 1px solid var(--azul-border);">
+      <p class="azul-muted" style="margin-bottom: var(--spacing-sm);">Or share this link with the customer:</p>
+      <input type="text" value="{{ apple_url }}" readonly style="width: 100%; padding: var(--spacing-sm); border: 1px solid var(--azul-border); border-radius: var(--radius-md); font-size: var(--font-size-sm); font-family: ui-monospace, monospace;">
+    </div>
+  </div>
+</div>
+
+<style>
+  {% block extra_page_css %}
+  .azul-section {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  .azul-section-title {
+    margin: 0 0 var(--spacing-sm) 0;
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    color: var(--azul-dark);
+  }
+
+  .azul-section-subtitle {
+    margin: 0 0 var(--spacing-xl) 0;
+    color: var(--azul-muted);
+    font-size: var(--font-size-base);
+  }
+  {% endblock %}
+</style>
+{% endblock %}

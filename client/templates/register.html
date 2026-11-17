@@ -1,0 +1,192 @@
+{% extends "_base_azul.html" %}
+{% block title %}Register - AZUL Loyalty{% endblock %}
+
+{% block extra_css %}
+<style>
+  .azul-auth-container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: var(--spacing-xl) 0;
+  }
+
+  .azul-auth-card {
+    background: #fff;
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--azul-border);
+  }
+
+  .azul-auth-header {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+  }
+
+  .azul-auth-header h1 {
+    margin: 0 0 var(--spacing-sm) 0;
+    color: var(--azul-dark);
+    font-size: var(--font-size-2xl);
+  }
+
+  .azul-auth-header p {
+    margin: 0;
+    color: var(--azul-muted);
+    font-size: var(--font-size-base);
+  }
+
+  .azul-form-group {
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .azul-form-group label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    color: var(--azul-dark);
+    font-weight: 500;
+  }
+
+  .azul-form-group input {
+    width: 100%;
+    padding: var(--spacing-md);
+    border: 1px solid var(--azul-border);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-base);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  .azul-form-group input:focus {
+    outline: none;
+    border-color: var(--azul-accent);
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+  }
+
+  .azul-form-group input[type="password"] {
+    width: 100%;
+  }
+
+  .azul-form-row {
+    display: flex;
+    gap: var(--spacing-md);
+  }
+
+  .azul-form-row .azul-form-group {
+    flex: 1;
+    margin-bottom: 0;
+  }
+
+  .azul-auth-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-xl);
+  }
+
+  .azul-auth-links {
+    text-align: center;
+    margin-top: var(--spacing-lg);
+    font-size: var(--font-size-sm);
+  }
+
+  .azul-auth-links a {
+    color: var(--azul-accent);
+    text-decoration: none;
+  }
+
+  .azul-auth-links a:hover {
+    text-decoration: underline;
+  }
+
+  .azul-privacy-note {
+    font-size: var(--font-size-sm);
+    color: var(--azul-muted);
+    text-align: center;
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background: var(--azul-light);
+    border-radius: var(--radius-md);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="azul-auth-container">
+  <div class="azul-auth-card">
+    <div class="azul-auth-header">
+      <h1>Create Your Account</h1>
+      <p>Set up your merchant dashboard in minutes</p>
+    </div>
+
+    <form method="post" class="azul-form" id="registerForm">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <div class="azul-form-row">
+        <div class="azul-form-group">
+          <label for="shop_name">Shop Name</label>
+          <input type="text" id="shop_name" name="shop_name"
+                 value="{{ shop_name or '' }}"
+                 placeholder="e.g., Café Morocco"
+                 required>
+        </div>
+        <div class="azul-form-group">
+          <label for="business_type">Business Type</label>
+          <select id="business_type" name="business_type" required>
+            <option value="">Select...</option>
+            <option value="café" {% if business_type == 'café' %}selected{% endif %}>Café / Coffee Shop</option>
+            <option value="restaurant" {% if business_type == 'restaurant' %}selected{% endif %}>Restaurant</option>
+            <option value="retail" {% if business_type == 'retail' %}selected{% endif %}>Retail Store</option>
+            <option value="beauty" {% if business_type == 'beauty' %}selected{% endif %}>Beauty / Spa</option>
+            <option value="auto" {% if business_type == 'auto' %}selected{% endif %}>Auto Service</option>
+            <option value="other" {% if business_type == 'other' %}selected{% endif %}>Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="azul-form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email"
+               value="{{ email or '' }}"
+               placeholder="your@email.com"
+               required autocomplete="email">
+      </div>
+
+      <div class="azul-form-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone"
+               value="{{ phone or '' }}"
+               placeholder="+212 6 00 00 00 00"
+               autocomplete="tel">
+      </div>
+
+      <div class="azul-form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password"
+               placeholder="Create a secure password"
+               required minlength="8" autocomplete="new-password">
+        <small style="color: var(--azul-muted); font-size: var(--font-size-sm);">Minimum 8 characters</small>
+      </div>
+
+      <div class="azul-form-group">
+        <label for="confirm_password">Confirm Password</label>
+        <input type="password" id="confirm_password" name="confirm_password"
+               placeholder="Confirm your password"
+               required minlength="8" autocomplete="new-password">
+      </div>
+
+      <div class="azul-privacy-note">
+        By creating an account, you agree to our Terms of Service and Privacy Policy.
+      </div>
+
+      <div class="azul-auth-actions">
+        <button type="submit" class="azul-btn azul-btn--primary azul-btn--full-width" style="width: 100%;">
+          Create Account
+        </button>
+      </div>
+    </form>
+
+    <div class="azul-auth-links">
+      <a href="{{ url_for('auth.login') }}">Already have an account? Sign in</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

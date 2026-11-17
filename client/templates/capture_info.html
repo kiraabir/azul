@@ -1,0 +1,72 @@
+{% extends "_base_azul.html" %}
+{% block title %}Add Your Info{% endblock %}
+
+{% block content %}
+<div class="azul-section">
+  <div class="azul-card" style="max-width: 480px; margin: 0 auto; padding: var(--spacing-xl);">
+    <div class="azul-card-header">
+      <h3 class="azul-card-title">Add Your Information</h3>
+      <p class="azul-section-subtitle">Enter your details to receive your personalized loyalty card.</p>
+    </div>
+
+    <form method="post" class="azul-form">
+      <div class="azul-form-group">
+        <label>Name (required)</label>
+        <input type="text" name="name" required placeholder="e.g. Ahmed Benali" value="{{ customer.name if customer else '' }}">
+      </div>
+
+      <div class="azul-form-group">
+        <label>Phone number (optional)</label>
+        <input type="tel" name="phone" placeholder="+212 6 00 00 00 00" value="{{ customer.phone if customer else '' }}">
+        <p style="font-size: var(--font-size-sm); color: var(--azul-muted); margin-top: var(--spacing-xs);">
+          Provide your phone to receive SMS promotions and visits reminders (in 15 days if you haven't visited).
+        </p>
+      </div>
+
+      <button type="submit" class="azul-btn azul-btn--primary azul-btn--large">Continue to Wallet</button>
+    </form>
+
+    <div style="margin-top: var(--spacing-xl); text-align: center;">
+      <a href="{{ url_for('index') }}" class="azul-btn azul-btn--ghost">Back to Dashboard</a>
+    </div>
+  </div>
+</div>
+
+<style>
+  {% block extra_page_css %}
+  .azul-section {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  .azul-form-group label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    color: var(--azul-muted);
+    font-weight: 500;
+  }
+
+  .azul-form-group input {
+    width: 100%;
+    padding: var(--spacing-md);
+    border: 1px solid var(--azul-border);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-base);
+  }
+
+  .azul-form-group input:focus {
+    outline: none;
+    border-color: var(--azul-accent);
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+  }
+
+  .azul-btn--large {
+    width: 100%;
+    padding: var(--spacing-lg);
+    font-size: var(--font-size-lg);
+  }
+  {% endblock %}
+</style>
+{% endblock %}

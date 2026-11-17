@@ -1,0 +1,224 @@
+{% extends "_base_azul.html" %}
+{% block title %}My Card - {{ card.card_number }}{% endblock %}
+
+{% block content %}
+<div class="azul-section">
+  <style>
+    @media (max-width: 600px) {
+      .azul-portrait {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+
+  <div class="azul-stats" style="grid-template-columns: 1fr; max-width: 480px; margin: 0 auto;">
+    {# Loyalty Card #}
+    <div class="azul-card" style="margin-bottom: var(--spacing-xl);">
+      <div style="display: flex; gap: var(--spacing-md); align-items: center; margin-bottom: var(--spacing-md);">
+        <div style="font-size: 1.5rem; font-weight: 700; color: var(--azul-dark);">{{ card.customer.name if card.customer else 'Your' }}</div>
+        {% if card.customer and card.customer.has_phone %}
+          <span class="azul-badge azul-badge--success" style="font-size: 0.7rem;">SMS Active</span>
+        {% elif card.customer and card.customer.phone %}
+          <span class="azul-badge azul-badge--secondary" style="font-size: 0.7rem;">SMS Disabled</span>
+        {% endif %}
+      </div>
+
+      {% if card.customer and card.customer.phone %}
+        <p style="font-size: var(--font-size-sm); color: var(--azul-muted); margin-bottom: var(--spacing-md);">
+          {{ card.customer.phone }}
+        </p>
+      {% endif %}
+
+      <p style="font-size: var(--font-size-sm); color: var(--azul-muted); margin-bottom: var(--spacing-lg);">Your Loyalty Card</p>
+
+      <p style="font-family: ui-monospace, monospace; font-size: 1.1rem; margin: 0 0 var(--spacing-lg) 0; color: var(--azul-dark); word-break: break-all;">
+        {{ card.card_number }}
+      </p>
+
+      {# Points and Progress #}
+      <div style="display: flex; flex-wrap: wrap; gap: var(--spacing-lg); align-items: center; margin-bottom: var(--spacing-lg);">
+        <div style="text-align: center;">
+          <div style="font-size: 2.5rem; font-weight: 800; color: var(--azul-dark);" {% if card.points_balance > 0 %}class="azul-stat-value azul-stat-value--growth"{% endif %}>
+            {{ card.points_balance }}
+          </div>
+          <div style="font-size: var(--font-size-sm); color: var(--azul-muted);">Points</div>
+        </div>
+
+        {% if progress %}
+          <div style="flex: 1; min-width: 150px;">
+            <div style="font-size: var(--font-size-sm); color: var(--azul-muted); margin-bottom: var(--spacing-xs);">
+              {{ progress.remaining }}/{{ progress.target }} stamps
+            </div>
+            <div class="azul-progress">
+              <div class="azul-progress-fill" style="width: {{ progress.progress }}%;"></div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      {# Wallet Status #}
+      <div style="padding: var(--spacing-md); margin-top: var(--spacing-lg);">
+        {% if card.wallet_serial %}
+          <div style="background: #e0f2fe; border-radius: var(--radius-md); border: 1px solid #bfdbfe; padding: var(--spacing-md); text-align: center;">
+            <strong style="color: #0c4a6e;">Wallet Pass: Synced ✓</strong>
+            <p style="font-size: var(--font-size-sm); color: var(--azul-muted); margin: 0;">Your card is in Apple Wallet or Google Wallet</p>
+          </div>
+        {% else %}
+          <div style="background: #fef3c7; border-radius: var(--radius-md); border: 1px solid #fde68a; padding: var(--spacing-md); text-align: center;">
+            <strong style="color: #92400e;">Wallet Pass: Not synced</strong>
+            <p style="font-size: var(--font-size-sm); color: var(--azul-muted); margin: 0;">Present at checkout to add to your wallet</p>
+          </div>
+        {% endif %}
+      </div>
+
+      {# QR Code #}
+      <div style="text-align: center; margin-top: var(--spacing-lg);">
+        <img class="qr" src="{{ url_for('card_qr_png', card_id=card.id) }}" alt="QR code" style="width: 150px; height: 150px; margin: 0 auto;">
+        <p style="font-size: var(--font-size-sm); color: var(--azul-muted); margin-top: var(--spacing-sm);">Scan for in-store loyalty</p>
+      </div>
+    </div>
+
+    {# Quick Actions #}
+    <div class="azul-card">
+      <h3 class="azul-card-title">Quick Actions</h3>
+
+      <form method="post" action="{{ url_for('card_earn', card_id=card.id) }}" class="azul-form" style="margin-bottom: var(--spacing-lg);">
+        <div style="display: flex; gap: var(--spacing-sm); align-items: center;">
+          <input type="number" name="points" min="1" value="1" style="width: 80px;" required>
+          <span style="flex: 1;">+ Earn stamps</span>
+          <button type="submit" class="azul-btn azul-btn--success" style="flex: 1;">Stamp</button>
+        </div>
+      </form>
+
+      {% if reward_tiers %}
+        <h4 style="margin: var(--spacing-xl) 0 var(--spacing-md) 0; font-size: var(--font-size-lg);">Available Rewards</h4>
+        <form method="post" action="{{ url_for('customer_redeem_reward', card_id=card.id) }}" class="azul-form" style="margin-bottom: var(--spacing-lg);">
+          <div style="display: flex; gap: var(--spacing-sm); align-items: center; flex-wrap: wrap;">
+            <select name="reward_tier_id" style="flex: 1; min-width: 150px;">
+              {% for tier in reward_tiers %}
+                <option value="{{ tier.id }}" {% if tier.threshold_stamps > card.points_balance %}disabled{% endif %}>
+                  {{ tier.name }} ({{ tier.threshold_stamps }} stamps)
+                </option>
+              {% endfor %}
+            </select>
+            <button type="submit" class="azul-btn azul-btn--primary azul-btn--small" style="flex: 1;">Redeem</button>
+          </div>
+        </form>
+      {% endif %}
+
+      <a href="{{ url_for('customer_submit_feedback', card_id=card.id) }}" class="azul-btn azul-btn--secondary" style="width: 100%; margin-bottom: var(--spacing-lg);">
+        Submit Feedback (+1 stamp)
+      </a>
+
+      <p style="font-size: var(--font-size-sm); color: var(--azul-muted); text-align: center;">
+        Earn form: e.g. "Coffee purchase". Redeem form: e.g. "Free pastry".
+      </p>
+    </div>
+  </div>
+
+  {# Transaction History #}
+  <div class="azul-card">
+    <div class="azul-card-header">
+      <h3 class="azul-card-title">Transaction History</h3>
+    </div>
+
+    {% if transactions %}
+      <div class="azul-table-container">
+        <table class="azul-table">
+          <thead>
+            <tr>
+              <th>When</th>
+              <th>Type</th>
+              <th>Stamps</th>
+              <th>Description</th>
+              <th>Feedback</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for tx in transactions %}
+              <tr>
+                <td class="azul-muted">{{ tx.created_at.strftime('%Y-%m-%d %H:%M') if tx.created_at else '' }}</td>
+                <td>
+                  {% if tx.type == 'earn' %}
+                    <span class="azul-badge azul-badge--success">Earned</span>
+                  {% else %}
+                    <span class="azul-badge azul-badge--secondary">Redeemed</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if tx.type == 'earn' %}
+                    <span class="azul-stat-value azul-stat-value--growth">+{{ tx.points }}</span>
+                  {% else %}
+                    <span class="azul-stat-value">-{{ tx.points }}</span>
+                  {% endif %}
+                </td>
+                <td>{{ tx.description }}</td>
+                <td>
+                  {% if tx.feedback %}
+                    ⭐ {{ tx.feedback.rating }}/5
+                  {% else %}
+                    <span class="azul-muted">—</span>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="azul-empty-state">
+        <div class="azul-empty-icon">📊</div>
+        <h3 class="azul-empty-title">No transactions yet</h3>
+        <p class="azul-empty-text">Start earning stamps by making a purchase at any AZUL merchant.</p>
+      </div>
+    {% endif %}
+  </div>
+
+  {# Notifications #}
+  <div class="azul-card">
+    <div class="azul-card-header">
+      <h3 class="azul-card-title">Notifications</h3>
+    </div>
+
+    {% if notifications %}
+      <table class="azul-table azul-table--compact">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Message</th>
+            <th>When</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for notif in notifications %}
+            <tr>
+              <td><strong>{{ notif.title }}</strong></td>
+              <td class="azul-muted">{{ notif.body }}</td>
+              <td class="azul-muted">{{ notif.sent_at.strftime('%Y-%m-%d %H:%M') if notif.sent_at else '' }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div class="azul-empty-state">
+        <p class="azul-empty-text" style="margin: 0;">No new notifications.</p>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  {% block extra_page_css %}
+  .azul-btn--small {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
+  }
+
+  .azul-table--compact th,
+  .azul-table--compact td {
+    padding: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+  }
+  {% endblock %}
+</style>
+{% endblock %}

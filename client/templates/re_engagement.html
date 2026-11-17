@@ -1,0 +1,86 @@
+{% extends "_base_azul.html" %}
+{% block title %}Re-engagement Campaign{% endblock %}
+
+{% block content %}
+<div class="azul-section">
+  <div class="azul-card" style="max-width: 480px; margin: 0 auto; padding: var(--spacing-xl);">
+    <div class="azul-card-header">
+      <h3 class="azul-card-title">Re-engagement Campaign</h3>
+      <p class="azul-section-subtitle">Send an SMS message to inactive customers who haven't visited in {{ settings.reengage_days }} days.</p>
+    </div>
+
+    {% if customers %}
+      <div style="background: #eff6ff; border-radius: var(--radius-md); padding: var(--spacing-lg); margin-bottom: var(--spacing-lg); border-left: 4px solid var(--azul-accent);">
+        <p style="margin: 0; font-size: var(--font-size-lg); font-weight: 600;">
+          {{ customers|length }} customer{{ 's' if customers|length != 1 else '' }}
+        </p>
+        <p style="margin: var(--spacing-xs) 0 0 0; color: var(--azul-muted); font-size: var(--font-size-sm);">
+          Last visit: {{ settings.reengage_days }}+ days ago
+        </p>
+      </div>
+
+      <div class="azul-form-group">
+        <label>Message Content</label>
+        <textarea name="content" rows="4" required placeholder="e.g. We miss you! Come back for a free item. Use code AZUL10 for 10% off your next visit.">{{ content if content else 'We miss you! Come back for a special reward. Show this message at checkout.' }}" style="font-family: inherit;"></textarea>
+      </div>
+
+      <div style="padding: var(--spacing-md); background: #f0f9ff; border-radius: var(--radius-md); margin-bottom: var(--spacing-lg);">
+        <p style="font-size: var(--font-size-sm); color: var(--azul-muted); margin: 0 0 var(--spacing-xs) 0;">
+          <strong>Sample message:</strong>
+        </p>
+        <p style="font-size: var(--font-size-sm); color: #0c4a6e; margin: 0; font-family: ui-monospace, monospace;">
+          "Hi {{ customers[0].name if customers|length > 0 else '' }}! We miss you. Return this week for a welcome back gift. - AZUL"
+        </p>
+      </div>
+
+      <button type="submit" class="azul-btn azul-btn--primary azul-btn--large">Send to {{ customers|length }} Customers</button>
+
+      <div style="display: flex; gap: var(--spacing-md); justify-content: center; margin-top: var(--spacing-lg);">
+        <a href="{{ url_for('customers_list') }}" class="azul-btn azul-btn--ghost">Back to Customers</a>
+        <a href="{{ url_for('index') }}" class="azul-btn azul-btn--ghost">Dashboard</a>
+      </div>
+
+    {% else %}
+      <div class="azul-empty-state">
+        <div class="azul-empty-icon">📊</div>
+        <h3 class="azul-empty-title">No inactive customers found</h3>
+        <p class="azul-empty-text">All customers have visited recently.</p>
+        <a href="{{ url_for('customers_list') }}" class="azul-btn azul-btn--primary">View All Customers</a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  {% block extra_page_css %}
+  .azul-section {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  .azul-form-group label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    color: var(--azul-muted);
+    font-weight: 500;
+  }
+
+  .azul-form-group textarea {
+    width: 100%;
+    padding: var(--spacing-md);
+    border: 1px solid var(--azul-border);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-base);
+    font-family: var(--font-family);
+  }
+
+  .azul-form-group textarea:focus {
+    outline: none;
+    border-color: var(--azul-accent);
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+  }
+  {% endblock %}
+</style>
+{% endblock %}

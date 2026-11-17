@@ -1,0 +1,211 @@
+{% extends "_base_azul.html" %}
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+<div class="azul-section">
+  <h2 class="azul-section-title">Settings</h2>
+
+  <div class="azul-tab-nav">
+    <a href="{{ url_for('settings') }}" class="azul-tab azul-tab--active">Shop Settings</a>
+    <a href="{{ url_for('new_tier') }}" class="azul-tab">Reward Tiers</a>
+    <a href="{{ url_for('send_re_engagement_campaign') }}" class="azul-tab">Campaigns</a>
+  </div>
+
+  {# Shop Information #}
+  <div class="azul-card">
+    <div class="azul-card-header">
+      <h3 class="azul-card-title">Shop Information</h3>
+    </div>
+
+    <form method="post" class="azul-form">
+      <div class="azul-form-group">
+        <label>Shop name</label>
+        <input type="text" name="shop_name" value="{{ settings.shop_name }}">
+      </div>
+
+      <div class="azul-form-group">
+        <label>Shop logo URL (optional)</label>
+        <input type="url" name="logo_url" value="{{ settings.logo_url }}">
+      </div>
+
+      <div class="azul-form-group">
+        <label>Shop location (for proximity alerts)</label>
+        <input type="text" name="shop_latitude" value="{{ settings.shop_latitude }}" placeholder="Latitude">
+        <input type="text" name="shop_longitude" value="{{ settings.shop_longitude }}" placeholder="Longitude">
+      </div>
+
+      {# Loyalty Program #}
+      <h4 style="margin-top: var(--spacing-xl); margin-bottom: var(--spacing-md);">Loyalty Program</h4>
+
+      <div class="azul-form-group">
+        <label>Points earned per purchase</label>
+        <input type="number" name="points_per_purchase" min="0" value="{{ settings.points_per_purchase }}">
+      </div>
+
+      <div class="azul-form-group">
+        <label>Default stamp for feedback submission</label>
+        <input type="number" name="feedback_stamp_value" min="0" value="{{ settings.feedback_stamp_value }}">
+      </div>
+
+      <div class="azul-form-group">
+        <label>Re-engagement reminder (days after last visit)</label>
+        <input type="number" name="reengage_days" min="1" max="60" value="{{ settings.reengage_days }}">
+      </div>
+
+      {# Wallet Configuration #}
+      <h4 style="margin-top: var(--spacing-xl); margin-bottom: var(--spacing-md);">Wallet Configuration</h4>
+
+      <div class="azul-form-group">
+        <label>Apple Pass Type ID</label>
+        <input type="text" name="pass_type_id" value="{{ settings.pass_type_id }}" placeholder="pass.teamid.compass">
+      </div>
+
+      <div class="azul-form-group">
+        <label>Apple API Key ID</label>
+        <input type="text" name="api_key_id" value="{{ settings.api_key_id }}">
+      </div>
+
+      <div class="azul-form-group">
+        <label>Google Merchant ID</label>
+        <input type="text" name="google_merchant_id" value="{{ settings.google_merchant_id }}">
+      </div>
+
+      {# SMS Configuration #}
+      <h4 style="margin-top: var(--spacing-xl); margin-bottom: var(--spacing-md);">SMS Provider (for Morocco)</h4>
+
+      <div class="azul-form-group">
+        <label>SMS API Provider</label>
+        <select name="sms_provider">
+          <option value="default" {% if settings.sms_provider == 'default' %}selected{% endif %}>Default</option>
+          <option value="maroc_telecom" {% if settings.sms_provider == 'maroc_telecom' %}selected{% endif %}>Maroc Telecom API</option>
+          <option value="inwi" {% if settings.sms_provider == 'inwi' %}selected{% endif %}>Inwi API</option>
+          <option value="orange" {% if settings.sms_provider == 'orange' %}selected{% endif %}>Orange API</option>
+        </select>
+      </div>
+
+      <div class="azul-form-group">
+        <label>SMS API Key</label>
+        <input type="text" name="sms_api_key" value="{{ settings.sms_api_key }}">
+      </div>
+
+      <div style="display: flex; gap: var(--spacing-md); margin-top: var(--spacing-xl);">
+        <button type="submit" class="azul-btn azul-btn--primary">Save Settings</button>
+        <a href="{{ url_for('index') }}" class="azul-btn azul-btn--ghost">Cancel</a>
+      </div>
+    </form>
+  </div>
+
+  {# Reward Tiers #}
+  <div class="azul-card" style="margin-top: var(--spacing-xl);">
+    <div class="azul-card-header">
+      <h3 class="azul-card-title">Reward Tiers</h3>
+    </div>
+
+    {% if reward_tiers %}
+      <div class="azul-table-container">
+        <table class="azul-table">
+          <thead>
+            <tr>
+              <th>Threshold</th>
+              <th>Name</th>
+              <th>Description</th>
+              <th style="width: 100px;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for tier in reward_tiers %}
+              <tr>
+                <td>{{ tier.threshold_stamps }} stamps</td>
+                <td>{{ tier.name }}</td>
+                <td class="azul-muted">{{ tier.description or '-' }}</td>
+                <td>
+                  <a href="{{ url_for('edit_tier', tier_id=tier.id) }}" class="azul-btn azul-btn--ghost" style="font-size: var(--font-size-sm);">Edit</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="azul-empty-state">
+        <div class="azul-empty-icon">🏆</div>
+        <h3 class="azul-empty-title">No reward tiers yet</h3>
+        <p class="azul-empty-text">Create reward tiers to incentivize customer loyalty.</p>
+      </div>
+    {% endif %}
+
+    <a href="{{ url_for('new_tier') }}" class="azul-btn azul-btn--primary">➕ Add Reward Tier</a>
+  </div>
+</div>
+
+<style>
+  {% block extra_page_css %}
+  .azul-section {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  .azul-tab-nav {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+    flex-wrap: wrap;
+  }
+
+  .azul-tab {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--azul-muted);
+    background: #fff;
+    border: 1px solid var(--azul-border);
+    transition: background 0.15s, color 0.15s;
+  }
+
+  .azul-tab:hover {
+    background: #f8fafc;
+  }
+
+  .azul-tab--active {
+    background: var(--azul-accent);
+    color: #fff;
+    border-color: var(--azul-accent);
+  }
+
+  .azul-form-group {
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .azul-form-group label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    color: var(--azul-muted);
+    font-weight: 500;
+  }
+
+  .azul-form-group input,
+  .azul-form-group select {
+    width: 100%;
+    padding: var(--spacing-md);
+    border: 1px solid var(--azul-border);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-base);
+  }
+
+  .azul-form-group input:focus,
+  .azul-form-group select:focus {
+    outline: none;
+    border-color: var(--azul-accent);
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+  }
+
+  .azul-table-container {
+    overflow-x: auto;
+  }
+  {% endblock %}
+</style>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends "_base_azul.html" %}
+{% block title %}AZUL - Welcome{% endblock %}
+
+{% block content %}
+<div class="azul-section">
+  <div class="azul-card" style="max-width: 480px; margin: 0 auto; padding: var(--spacing-xl);">
+    <div style="text-align: center;">
+      <h2 style="margin-bottom: var(--spacing-lg);">Welcome to {{ shop_name }}!</h2>
+
+      <div style="background: #eff6ff; border-radius: var(--radius-lg); padding: var(--spacing-xl); margin-bottom: var(--spacing-lg);">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M9.09.91"></path>
+          <path d="M12 17v-6"></path>
+          <path d="M4.51 9.79l4.79-1.27"></path>
+        </svg>
+
+        <p style="font-size: var(--font-size-lg); margin: var(--spacing-lg) 0 0 0; color: #0c4a6e;">
+          Tap your phone near the counter, then enter your name to get your loyalty card.
+        </p>
+      </div>
+
+      <p style="color: var(--azul-muted); margin-bottom: var(--spacing-xl);">
+        Your loyalty card will appear in Apple Wallet or Google Wallet automatically.
+      </p>
+
+      <form method="post" action="{{ url_for('capture_customer_info') }}" class="azul-form">
+        <div class="azul-form-group">
+          <label>Name (required)</label>
+          <input type="text" name="name" required placeholder="e.g. Fatima Zahra">
+        </div>
+
+        <div class="azul-form-group">
+          <label>Phone number (optional - for SMS promotions)</label>
+          <input type="tel" name="phone" placeholder="+212 6 00 00 00 00">
+          <p style="font-size: var(--font-size-sm); color: var(--azul-muted); margin-top: var(--spacing-xs);">
+            By entering your phone, you'll receive SMS promotions and reminders.
+          </p>
+        </div>
+
+        <button type="submit" class="azul-btn azul-btn--primary azul-btn--large">Get My Loyalty Card</button>
+      </form>
+
+      <p style="font-size: var(--font-size-sm); color: var(--azul-muted); margin-top: var(--spacing-xl);">
+        <a href="{{ url_for('index') }}" class="azul-btn azul-btn--ghost">Back to Dashboard</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<style>
+  {% block extra_page_css %}
+  .azul-section {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  .azul-form-group label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    color: var(--azul-muted);
+    font-weight: 500;
+  }
+
+  .azul-form-group input {
+    width: 100%;
+    padding: var(--spacing-md);
+    border: 1px solid var(--azul-border);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-base);
+  }
+
+  .azul-form-group input:focus {
+    outline: none;
+    border-color: var(--azul-accent);
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+  }
+
+  .azul-btn--large {
+    width: 100%;
+    padding: var(--spacing-lg);
+    font-size: var(--font-size-lg);
+  }
+  {% endblock %}
+</style>
+{% endblock %}
